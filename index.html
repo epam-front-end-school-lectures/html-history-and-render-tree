@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>HTML5 vs HTML/HTML 4.01/XHTML Presentation</title>
+		<meta name="description" content="HTML5 vs HTML/HTML 4.01/XHTML Presentation">
+		<meta name="author" content="Andrii Mokhovyk">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/epam.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+
+		<!--
+		PRIMARY COLORS
+		SHARP BLUE: #39C2D7
+		LIME GREEN: #A3C644
+		GRAPHITE: #464547
+		WHITE: #ffffff
+
+		SECONDARY COLORS
+		RASPBERRY: #B22746
+		-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- SLIDES -->
+			<div class="slides">
+
+				<!-- SECTION 0 -->
+				<section data-background="#39C2D7" class="has-dark-background-custom">
+					<h1>HTML/XTML <small style="display:block;">and</small> <span class="second-title">Critical rendering path</span></h1>
+					<p>
+						<small>Created by <a href="http://mokhovyk.com">Maksym Kolisnyk</a></small>
+					</p>
+					<img width="288" height="108" class="plain" style="margin-bottom:-118px;" data-src="img/epam_logo_white.png" alt="EPAM">
+				</section>
+
+				<section>
+					<h2>Agenda</h2>
+					<ol>
+						<li class="fragment grow">Intro in HTML/XHTML</li>
+						<li class="fragment grow">Constructing the Object Model</li>
+						<li class="fragment grow">Render-Tree Construction Layout and Paint</li>
+						<li class="fragment grow">Render-Blocking CSS</li>
+						<li class="fragment grow">Adding Interactivity with JavaScript</li>
+					</ol>
+				</section>
+				<!-- /SECTION 0 -->
+
+				<!-- SECTION 1 -->
+				<section data-background="#39C2D7" class="has-dark-background-custom">
+					<h1>Intro in HTML/XHTML</h1>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						## What is HTML?
+
+						HyperText Markup Language is the standard markup language used to create web pages.
+
+						```
+						<!DOCTYPE html>
+						<html>
+						<head>
+							<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+							<title>HTML Document</title>
+						</head>
+						<body>
+							<p>
+								<b>
+									It is bold text,
+									<i>it is also italic text</i>
+								</b>
+							</p>
+						</body>
+						</html>
+						```
+					</script>
+				</section>
+
+				<section>
+					<h5>Developed in 1986—1991 by Tim Berners-Lee</h5>
+				</section>
+
+				<section>
+					<h3>Timeline</h3>
+					<div class="timeline">
+						<div class="timeline__row">
+							<div class="timeline__cell" data-title="1995">
+								<div class="timeline__drop fragment" style="top:150px;">
+									<h5>24.11.1995</h5>
+									<p><b class="label-sec">HTML 2.0</b> was published as IETF RFC 1866</p>
+								</div>
+							</div>
+							<div class="timeline__cell" data-title="1997">
+								<div class="timeline__drop fragment" style="left:-9px;z-index:2;">
+									<h5>14.01.1997</h5>
+									<p><b class="label-sec">HTML 3.2</b> was published as a W3C Recom.</p>
+								</div>
+								<div class="timeline__drop fragment" style="left:85%;top:300px;">
+									<h5>18.12.1997</h5>
+									<p><b class="label-sec">HTML 4.0</b>&nbsp;was published as a W3C Recom.</p>
+								</div>
+							</div>
+							<div class="timeline__cell" data-title="1999">
+								<div class="timeline__drop fragment">
+									<h5>24.12.1999</h5>
+									<p><b class="label-sec">HTML 4.01</b> was published as a W3C Recom.</p>
+								</div>
+							</div>
+							<div class="timeline__cell" data-title="2000">
+								<div class="timeline__drop fragment" style="top:150px;">
+									<h5>15.05.2000</h5>
+									<p><b class="label-sec">ISO HTML</b>, based on HTML 4.01 Strict was published as an ISO/IEC international standard</p>
+								</div>
+							</div>
+							<div class="timeline__cell" data-title="2015">
+								<div class="timeline__drop fragment" style="left:3px;">
+									<h5>28.10.2014</h5>
+									<p><b class="label-sec">HTML5</b> was published as a W3C Recom.</p>
+								</div>
+							</div>
+                            <div class="timeline__cell" data-title="2017">
+                                <div class="timeline__drop fragment" style="left:3px;">
+                                    <h5>03.10.2017</h5>
+                                    <p><b class="label-sec">HTML5.1</b> was published as a W3C Recom.</p>
+                                </div>
+                            </div>
+
+						</div>
+					</div>
+				</section>
+				<!-- /SECTION 1 -->
+
+				<!-- SECTION 2 -->
+				<section data-background="#39C2D7" class="has-dark-background-custom">
+					<h1>XHTML1</h1>
+				</section>
+
+				<section>
+					<h2>XHTML1<br><small>extensible hypertext markup language</small></h2>
+					<p>In 1998, World Wide Web Consortium began work on the new markup language based on HTML 4 but corresponding syntax XML.
+						Subsequently, a new language called XHTML. The first version of XHTML 1.0 as a Recommendation approved by W3C in January 26, 2000.</p>
+				</section>
+
+				<section>
+					<div style="position: relative; margin:0 auto; width:800px; height:600px; color:#fff;">
+						<div style="background:#464547; top:0; left:0; width:800px; height:600px; position:absolute;  border-radius:50%;">
+							<h3 style="color:#fff; margin-top:60px;">SGML <small>1960</small></h3>
+						</div>
+						<div class="fragment" style="background:#39C2D7; top:150px; left:130px; width:300px; height:300px; position:absolute; border-radius:50%;">
+							<h3 style="color:#fff; margin-top:100px; margin-right:40px;">HTML<br><small>1990</small></h3>
+						</div>
+						<div class="fragment" style="background:#A3C644; top:150px; right:130px; width:300px; height:300px; position:absolute; border-radius:50%;">
+							<h3 style="color:#fff; margin-top:100px; margin-left:22px;">XML<br><small>1996</small></h3>
+						</div>
+						<div class="fragment" style="background:#B22746; top:225px; left:325px; width:150px; height:150px; position:absolute; border-radius:50%;">
+							<h4 style="color:#fff; margin-top:38px;">XHTML<br><small>2000</small></h4>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h3>Differences between XHTML and HTML</h3>
+					<p style="text-align:left;">The main difference with HTML and XHTML is processing the document.
+						XHTML documents are processed by its module (parser) similar documents XML.<br>
+						During this processing, the mistakes made by developers, not corrected.
+
+						<small>As a W3C Recommendation browsers encountering an error in XHTML, you must report it and not to process document.
+						For HTML browsers had to try to understand what the author meant;</small>
+					</p>
+					<p style="text-align:left;">
+						Browser selects the parser to process the document based on the header content-type, obtained from the server:<br>
+						HTML — text/html<br>
+						XHTML — application/xhtml+xml
+					</p>
+					<p style="text-align:left;"><small>The default encoding is UTF-8 (as opposed to HTML, which is the default encoding ISO 8859-1).</small></p>
+				</section>
+
+				<section>
+					<h3>Rules of XHTML</h3>
+					<ul style="text-align:left;">
+						<li>All elements must be closed. Tags that don't have a closing tag (e.g. <b class="label-err">&lt;img&gt;</b>
+							or <b class="label-err">&lt;br&gt;</b>), must have at the end / (e.g. <b class="label-sec">&lt;br /&gt;</b>)
+						</li>
+						<li>Logical attributes are written in expanded form. For example, you should write
+							<b class="label-sec">&lt;option selected="selected"&gt;</b> or <b class="label-sec">&lt;td nowrap="nowrap"&gt;</b>
+							instead <b class="label-err">&lt;option selected&gt;</b> or <b class="label-err">&lt;td nowrap&gt;</b>
+						</li>
+						<li>
+							Tag names and attributes must be written in lowercase letters (e.g. <b class="label-sec">&lt;img alt="" /&gt;</b> instead <b class="label-err">&lt;IMG ALT="" /&gt;</b>)
+						</li>
+						<li>
+							XHTML is much stricter refers to errors in the code <b class="label-err">&lt;</b> and <b class="label-err">&amp;</b> everywhere, even in the URL,
+							must be replaced by <b class="label-sec">&amp;lt;</b> and <b class="label-sec">&amp;amp;</b> respectively.
+						</li>
+					</ul>
+				</section>
+				<!-- /SECTION 2 -->
+
+				<!-- SECTION 3 -->
+				<section data-background="#39C2D7" class="has-dark-background-custom">
+					<h1>Constructing the Object Model</h1>
+				</section>
+
+				<section>
+					<img src="img/render/full-process.png" alt="">
+				</section>
+				<section>
+					<img src="img/render/parse-html.png" alt="">
+				</section>
+
+				<section>
+					<h3>CSSOM Model</h3>
+					<pre><code class="hljs">
+body { font-size: 16px }
+p { font-weight: bold }
+span { color: red }
+p span { display: none }
+img { float: right }
+				</code></pre>
+					<div class="fragment">
+						<img src="img/render/cssom-construction.png" alt="">
+					</div>
+				</section>
+
+				<section>
+					<h3>CSSOM TREE</h3>
+					<img src="img/render/cssom-tree.png" alt="">
+				</section>
+				<section>
+					<h3>Recalculate style</h3>
+					<img src="img/render/recalculate-style.png" alt="">
+				</section>
+				<!-- /SECTION 3 -->
+
+				<!-- SECTION 4 -->
+				<section data-background="#39C2D7" class="has-dark-background-custom">
+					<h1>Render-Tree Construction Layout and Paint</h1>
+				</section>
+
+				<section>
+					<h3>Render-Tree Construction</h3>
+					<img src="img/render/render-tree-construction.png" alt="">
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						```
+						<!DOCTYPE html>
+						<html>
+						<head>
+							<meta name="viewport" content="width=device-width,initial-scale=1">
+							<title>Critial Path: Hello world!</title>
+						</head>
+						<body>
+						<div style="width: 50%">
+							<div style="width: 50%">Hello world!</div>
+						</div>
+						</body>
+						</html>
+						```
+						<img class="fragment" src="img/render/layout-viewport.png" alt="">
+					</script>
+				</section>
+				
+				<section>
+					<h3>Layout perfomance</h3>
+					<img src="img/render/layout-perfomance.png" alt="">
+				</section>
+				<!-- /SECTION 4 -->
+
+				<!-- SECTION 5 -->
+				<section data-background="#39C2D7" class="has-dark-background-custom">
+					<h1>Render-Blocking CSS</h1>
+				</section>
+
+				<section>
+					<h3>The new york times with/without css</h3>
+					<img src="img/render/nytimes-css-devices.png" alt="">
+				</section>
+
+				<section>
+					<h3>Useful examples</h3>
+					<pre><code class="html">
+<link href="style.css" rel="stylesheet">
+<link href="print.css" rel="stylesheet" media="print">
+<link href="other.css" rel="stylesheet" media="(min-width: 40em)">
+					</code></pre>
+
+					<pre class="fragment"><code class="html">
+<link href="style.css"    rel="stylesheet">
+<link href="style.css"    rel="stylesheet" media="all">
+<link href="portrait.css" rel="stylesheet" media="orientation:portrait">
+<link href="print.css"    rel="stylesheet" media="print">
+					</code></pre>
+				</section>
+				<!-- /SECTION 5 -->
+
+				<!-- SECTION 6 -->
+				<section data-background="#39C2D7" class="has-dark-background-custom">
+					<h1>Constructing the Object Model</h1>
+				</section>
+
+				<section>
+					<h3>JS and DOM</h3>
+					<pre><code class="html">
+<p>Hello <span>web performance</span> students!</p>
+<div><img src="awesome-photo.jpg"></div>
+    <script>
+	  // create a new element, style it, and append it to the DOM
+	  var loadTime = document.createElement('div');
+	  loadTime.textContent = 'You loaded this page on: ' + new Date();
+	  loadTime.style.color = 'blue';
+	  document.body.appendChild(loadTime);
+    </script>
+					</code></pre>
+				</section>
+
+				<section>
+					<pre><code class="html">
+<p>Hello <span>web performance</span> students!</p>
+<div><img src="awesome-photo.jpg"></div>
+<script src="app.js"></script>
+					</code></pre>
+
+					<pre class="fragment"><code class="html">
+<p>Hello <span>web performance</span> students!</p>
+<div><img src="awesome-photo.jpg"></div>
+<script src="app.js" async></script>
+					</code></pre>
+				</section>
+				<!-- /SECTION 6 -->
+
+				<!-- SECTION 9 -->
+				<section style="text-align: left;">
+					<h1>THE END</h1>
+					<h2>any questions?</h2>
+				</section>
+				<!-- /SECTION 9 -->
+
+			</div>
+			<!-- /SLIDES -->
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
